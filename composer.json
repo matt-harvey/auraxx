@@ -25,12 +25,17 @@
       "aura/router": "^3.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan": "^1.6"
     },
     "scripts": {
+      "check": ["@test", "@stan"],
+      "stan": "vendor/bin/phpstan analyse src test",
       "test": "vendor/bin/phpunit test"
     },
     "scripts-descriptions": {
+      "check": "Run all quality assurance checks",
+      "stan": "Run static analysis check with PHPStan",
       "test": "Run the tests"
     },
     "support": {
