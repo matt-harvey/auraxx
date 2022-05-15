@@ -7,7 +7,6 @@ namespace MattHarvey\Auraxx;
 use Aura\Router\Map;
 use Aura\Router\RouterContainer;
 use Exception;
-use Lib\Http\Action;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriFactoryInterface;
@@ -18,7 +17,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Router is a wrapper around the Aura library's RouterContainer. It is designed to be extended
  * by an application-specific router that defines the actual routes, and then used
- * in conjunction with a Lib\Http\Application instance for actually handling a request.
+ * in conjunction with an Application instance for actually handling a request.
  *
  * Router adds certain functionality to the Aura router:
  * * Allows default middleware to be defined globally, by overriding `::getDefaultMiddlewares`,
@@ -225,7 +224,7 @@ abstract class Router
     /**
      * @internal
      *
-     * This method is for internal use by \Lib\Http\Application only.
+     * This method is for internal use by auraxx library code only.
      */
     public function createAction(ContainerInterface $container, ServerRequestInterface $request): Action
     {
