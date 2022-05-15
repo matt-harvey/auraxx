@@ -52,8 +52,3 @@ composer require matt-harvey/auraxx
 
 If this project seems useful to you, but you'd like to improve or fix it in some way, feel free
 to raise an Issue or PR.
-
-## TODO
-
-* More unit tests
-* Example application
