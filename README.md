@@ -1,5 +1,12 @@
 # auraxx
 
+[![Github actions Build](https://github.com/matt-harvey/auraxx/workflows/tests/badge.svg)](https://github.com/matt-harvey/auraxx/actions/workflows/check.yml)
+[![Latest Stable Version](http://poser.pugx.org/matt-harvey/auraxx/v)](https://packagist.org/packages/matt-harvey/auraxx)
+[![Total Downloads](http://poser.pugx.org/matt-harvey/auraxx/downloads)](https://packagist.org/packages/matt-harvey/auraxx)
+[![Latest Unstable Version](http://poser.pugx.org/matt-harvey/auraxx/v/unstable)](https://packagist.org/packages/matt-harvey/auraxx)
+[![License](http://poser.pugx.org/matt-harvey/auraxx/license)](https://packagist.org/packages/matt-harvey/auraxx)
+[![PHP Version Require](http://poser.pugx.org/matt-harvey/auraxx/require/php)](https://packagist.org/packages/matt-harvey/auraxx)
+
 > a PSR-friendly, Aura-based, MVC-inclined PHP router
 
 ## Motivation
