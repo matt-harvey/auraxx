@@ -30,6 +30,8 @@ actually handling a request.
 * A "convention-over-configuration" mechanism whereby the route name will, by default, determine the
   controller and method that will be called when that route is resolved (after the middleware layer
   has been traversed).
+* Automatic injection of string or integer route parameters into the controller method based
+  on matching method parameter names and types.
 * Methods to configure middleware applicability on a per-route/-route-group basis
 * Methods to configure permitted auth roles on a per-route/-route-group basis
 

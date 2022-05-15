@@ -34,6 +34,8 @@ use Psr\Log\LoggerInterface;
  *   ```
  *   $map->get('admin.dashboard.index', '/admin')
  *   ```
+ * * Automatic injection of string or integer route parameters into corresponding controller
+ *   method parameters based on matching parameter name and type.
  */
 abstract class Router
 {

@@ -10,6 +10,11 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * Forms the outermost layer of the application.
+ *
+ * TODO Document this.
+ */
 final class Application implements RequestHandlerInterface
 {
     public function __construct(
