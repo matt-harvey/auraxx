@@ -1,5 +1,11 @@
 # Changelog
 
+### v0.3.0
+
+* BREAKING CHANGE: Now depends on PSR-11 (ContainerInterface) >= v1.1 but < v2. This is
+  to enable support for the PHP-DI package, until such time as the latter catches up
+  with PSR-11 v2.
+
 ### v0.2.0
 
 * BREAKING CHANGE: `Application::handle` now normalizes the HTTP method before further processing

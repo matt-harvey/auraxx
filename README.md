@@ -19,7 +19,8 @@ It takes its place unashamedly among the 50,000,000 other PHP router packages. I
 mainly so I can easily reuse this code across my own projects, and I because I have no particular
 reason to keep it private.
 
-This is alpha-stage, pre-v1 software. It's MIT licensed so you can use it if you want, but pleased be warned.
+This is pre-alpha-stage, pre-v1 software. The package is very unstable with breaking changes happening at
+any time. It's MIT licensed so you can use it if you want, but pleased be warned.
 
 ## Library overview
 
