@@ -2,7 +2,7 @@
 
 ### v0.2.0
 
-* BREAKING CHANGE: `Application::handle` now normalized the HTTP method before further processing
+* BREAKING CHANGE: `Application::handle` now normalizes the HTTP method before further processing
 * Documentation improvements
 * PHPStan added to CI
 
