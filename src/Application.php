@@ -15,9 +15,6 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * The consumer of this class is responsible for constructing that request and emitting
  * that response.
- *
- * Application class arranges for routing, middleware execution, controller instantiation,
- * and passing to the appropriate controller method.
  */
 final class Application implements RequestHandlerInterface
 {
@@ -41,13 +38,41 @@ final class Application implements RequestHandlerInterface
     {
     }
 
+    /**
+     * Runs the application, arranging for HTTP method normalization, routing, middleware execution,
+     * controller instantiation, and passing to the appropriate controller method.
+     *
+     * The consumer of this class is responsible for constructing the request instance in the first
+     * place, and emitting the response.
+     *
+     * `Application::handle` will, before it does anything else, normalize the HTTP method of the request, by
+     * examining each of the following in turn:
+     * * `X-Http-Method-Override` header;
+     * * Any field named `_METHOD` or `_method` on the parsed request body; this applies to
+     *   `application/x-www-form-urlencoded` or `multipart/form-data` request bodies only (AJAX requests
+     *   can set their own method just fine)
+     * The HTTP method is then capitalized (`get` becomes `GET` etc.).
+     * The thus-normalized method is then used for the rest of the request/response cycle, and
+     * will be the return value whenever `$request->getMethod()` is called.
+     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $request = self::normalizeMethod($request);
         $router = $this->container->get(Router::class);
         $action = $router->createAction($this->container, $request);
         $request = $request
             ->withAttribute($this->controllerAttributeKey, $action->getController())
             ->withAttribute($this->permittedRolesAttributeKey, $action->getPermittedRoles());
         return $action->handle($request);
+    }
+
+    private static function normalizeMethod(ServerRequestInterface $request): ServerRequestInterface
+    {
+        $method = $request->getHeaderLine('X-Http-Method-Override');
+        if (strlen($method) == 0) {
+            $body = $request->getParsedBody();
+            $method = $body['_METHOD'] ?? $body['_method'] ?? $request->getMethod();
+        }
+        return $request->withMethod(strtoupper($method));
     }
 }
