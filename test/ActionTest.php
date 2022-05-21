@@ -1,0 +1,122 @@
+<?php
+
+declare(strict_types=1);
+
+use MattHarvey\Auraxx\Action;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
+
+final class DummyController
+{
+    public function show(ServerRequestInterface $request, int $id): ResponseInterface
+    {
+        $psr17Factory = new Psr17Factory();
+        $responseBody = $psr17Factory->createStream("Hi! You passed me: $id.");
+        $response = $psr17Factory->createResponse(200)->withBody($responseBody);
+        return $response;
+    }
+}
+
+final class DummyMiddlewareA implements MiddlewareInterface
+{
+    public int $called = 0;
+
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $this->called++;
+        return $handler->handle($request);
+    }
+}
+
+final class DummyMiddlewareB implements MiddlewareInterface
+{
+    public int $called = 0;
+
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $this->called++;
+        return $handler->handle($request);
+    }
+}
+
+final class ActionTest extends TestCase
+{
+    public function testConstruct(): void
+    {
+        $controller = new DummyController;
+        $middlewareA = new DummyMiddlewareA;
+        $middlewareB = new DummyMiddlewareB;
+        $logger = $this->createMock(LoggerInterface::class);
+        $action = new Action(
+            controller: $controller,
+            controllerMethod: 'index',
+            routeParameters: ['id' => '3'],
+            permittedRoles: ['premium'],
+            middlewares: [$middlewareA, $middlewareB],
+            logger: $logger,
+        );
+        $this->assertInstanceOf(Action::class, $action);
+    }
+
+    public function testGetController(): void
+    {
+        $controller = new DummyController;
+        $middlewareA = new DummyMiddlewareA;
+        $middlewareB = new DummyMiddlewareB;
+        $logger = $this->createMock(LoggerInterface::class);
+        $action = new Action(
+            controller: $controller,
+            controllerMethod: 'index',
+            routeParameters: ['id' => '3'],
+            permittedRoles: ['premium'],
+            middlewares: [$middlewareA, $middlewareB],
+            logger: $logger,
+        );
+        $returnedController = $action->getController();
+        $this->assertInstanceOf(DummyController::class, $returnedController);
+        $this->assertTrue($returnedController === $controller);
+    }
+
+    public function testGetPermittedRoles(): void
+    {
+        $controller = new DummyController;
+        $middlewareA = new DummyMiddlewareA;
+        $middlewareB = new DummyMiddlewareB;
+        $logger = $this->createMock(LoggerInterface::class);
+        $action = new Action(
+            controller: $controller,
+            controllerMethod: 'index',
+            routeParameters: ['id' => '3'],
+            permittedRoles: ['premium'],
+            middlewares: [$middlewareA, $middlewareB],
+            logger: $logger,
+        );
+        $this->assertEquals(['premium'], $action->getPermittedRoles());
+    }
+
+    public function testHandle(): void
+    {
+        $controller = new DummyController;
+        $middlewareA = new DummyMiddlewareA;
+        $middlewareB = new DummyMiddlewareB;
+        $logger = $this->createMock(LoggerInterface::class);
+        $action = new Action(
+            controller: $controller,
+            controllerMethod: 'show',
+            routeParameters: ['id' => '3'],
+            permittedRoles: ['premium'],
+            middlewares: [$middlewareA, $middlewareB],
+            logger: $logger,
+        );
+        $request = $this->createMock(ServerRequestInterface::class);
+        $response = $action->handle($request);
+        $this->assertEquals(1, $middlewareA->called);
+        $this->assertEquals(1, $middlewareB->called);
+        $this->assertEquals('Hi! You passed me: 3.', (string) $response->getBody());
+    }
+}
