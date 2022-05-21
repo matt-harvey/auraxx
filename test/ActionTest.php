@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
+use TestUtil\Factory\ActionFactory;
 
 final class DummyController
 {
@@ -46,13 +47,15 @@ final class DummyMiddlewareB implements MiddlewareInterface
 
 final class ActionTest extends TestCase
 {
-    public function testConstruct(): void
+    private ActionFactory $actionFactory;
+
+    protected function setUp(): void
     {
         $controller = new DummyController;
         $middlewareA = new DummyMiddlewareA;
         $middlewareB = new DummyMiddlewareB;
         $logger = $this->createMock(LoggerInterface::class);
-        $action = new Action(
+        $this->actionFactory = new ActionFactory(
             controller: $controller,
             controllerMethod: 'index',
             routeParameters: ['id' => '3'],
@@ -60,23 +63,12 @@ final class ActionTest extends TestCase
             middlewares: [$middlewareA, $middlewareB],
             logger: $logger,
         );
-        $this->assertInstanceOf(Action::class, $action);
     }
 
     public function testGetController(): void
     {
         $controller = new DummyController;
-        $middlewareA = new DummyMiddlewareA;
-        $middlewareB = new DummyMiddlewareB;
-        $logger = $this->createMock(LoggerInterface::class);
-        $action = new Action(
-            controller: $controller,
-            controllerMethod: 'index',
-            routeParameters: ['id' => '3'],
-            permittedRoles: ['premium'],
-            middlewares: [$middlewareA, $middlewareB],
-            logger: $logger,
-        );
+        $action = $this->actionFactory->createAction(['controller' => $controller]);
         $returnedController = $action->getController();
         $this->assertInstanceOf(DummyController::class, $returnedController);
         $this->assertTrue($returnedController === $controller);
@@ -84,18 +76,7 @@ final class ActionTest extends TestCase
 
     public function testGetPermittedRoles(): void
     {
-        $controller = new DummyController;
-        $middlewareA = new DummyMiddlewareA;
-        $middlewareB = new DummyMiddlewareB;
-        $logger = $this->createMock(LoggerInterface::class);
-        $action = new Action(
-            controller: $controller,
-            controllerMethod: 'index',
-            routeParameters: ['id' => '3'],
-            permittedRoles: ['premium'],
-            middlewares: [$middlewareA, $middlewareB],
-            logger: $logger,
-        );
+        $action = $this->actionFactory->createAction(['permittedRoles' => ['premium']]);
         $this->assertEquals(['premium'], $action->getPermittedRoles());
     }
 
@@ -104,15 +85,12 @@ final class ActionTest extends TestCase
         $controller = new DummyController;
         $middlewareA = new DummyMiddlewareA;
         $middlewareB = new DummyMiddlewareB;
-        $logger = $this->createMock(LoggerInterface::class);
-        $action = new Action(
-            controller: $controller,
-            controllerMethod: 'show',
-            routeParameters: ['id' => '3'],
-            permittedRoles: ['premium'],
-            middlewares: [$middlewareA, $middlewareB],
-            logger: $logger,
-        );
+        $action = $this->actionFactory->createAction([
+            'controller' => $controller,
+            'controllerMethod' => 'show',
+            'routeParameters' => ['id' => '3'],
+            'middlewares' => [$middlewareA, $middlewareB],
+        ]);
         $request = $this->createMock(ServerRequestInterface::class);
         $response = $action->handle($request);
         $this->assertEquals(1, $middlewareA->called);
