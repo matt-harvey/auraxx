@@ -43,10 +43,14 @@ abstract class Router
     /**
      * @param ?callable $loggerFactory will be passed to \Aura\Router\RouterContainer::setLoggerFactory,
      *   if it is not null.
+     * @param string $fallbackRouteName the name of the route that you want otherwise unmatched
+     *   requests to fall back to. (Generally, this should map to a controller method that you have
+     *   arranged to respond with a 404.)
      */
     public function __construct(
         protected readonly UriFactoryInterface $uriFactory,
         ?callable $loggerFactory = null,
+        private readonly string $fallbackRouteName = 'error.notFound',
     )
     {
         $routerContainer = new RouterContainer();
@@ -188,7 +192,7 @@ abstract class Router
     {
         $route = $this->routerContainer->getMatcher()->match($request);
         if (empty($route)) {
-            return $this->getRoute('error.notFound');
+            return $this->getRoute($this->fallbackRouteName);
         }
         if (!is_a($route, Route::class)) {
             throw new Exception('Route is of unexpected type');
