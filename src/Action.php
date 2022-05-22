@@ -39,7 +39,7 @@ class Action implements RequestHandlerInterface
         private readonly array $routeParameters,
         private readonly ?array $permittedRoles,
         array $middlewares,
-        private readonly LoggerInterface $logger,
+        private readonly ?LoggerInterface $logger,
     )
     {
         $this->middlewares = array_reverse($middlewares);
@@ -64,7 +64,9 @@ class Action implements RequestHandlerInterface
             $controller = $this->controller;
             $controllerMethod = $this->controllerMethod;
             $controllerClass = get_class($controller);
-            $this->logger->info("Dispatching to {$controllerClass}::{$controllerMethod}");
+            if ($this->logger !== null) {
+                $this->logger->info("Dispatching to {$controllerClass}::{$controllerMethod}");
+            }
 
             // Pass the request, along with matched route parameters to corresponding controller method
             // parameters.

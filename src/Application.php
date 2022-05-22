@@ -54,6 +54,19 @@ final class Application implements RequestHandlerInterface
      * The HTTP method is then capitalized (`get` becomes `GET` etc.).
      * The thus-normalized method is then used for the rest of the request/response cycle, and
      * will be the return value whenever `$request->getMethod()` is called.
+     *
+     * Before being passed to middleware pipeline (and thereafter to the controller method), the
+     * request will have the controller instance set as a request attribute on the `$controllerAttributeKey`,
+     * and the array of permitted roles (either `null` or an `array<string>`) for the given route, set
+     * as a request attribute on the `$permittedRolesAttributeKey`. (See the `Application`
+     * constructor for the value of these keys.)
+     *
+     * See `Aurax\Route` for more on how the permitted roles are configured on the router.
+     *
+     * Auraxx doesn't do anything further with the permitted roles other than recording them on the
+     * request. It is up to consumers of the `Auraxx` library to define middleware or other means
+     * to actually check a users' roles against these permitted roles and either allow or disallow
+     * the request.
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

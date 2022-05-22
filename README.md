@@ -45,10 +45,8 @@ actually handling a request.
 
 ## Detailed usage
 
-The code has detailed documentation comments. But an example project that uses this router
-would probably be more helpful than having to dig around in the doc comments.
-
-**TODO** Add an example project.
+The code has detailed documentation comment blocks. For example code that uses the library,
+see under the `testutil\Fixture\` directory of this repository.
 
 ## Installation
 

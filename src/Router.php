@@ -46,11 +46,18 @@ abstract class Router
      * @param string $fallbackRouteName the name of the route that you want otherwise unmatched
      *   requests to fall back to. (Generally, this should map to a controller method that you have
      *   arranged to respond with a 404.)
+     * @param array<string> $controllerNamespace An array of strings that will be joined to
+     *   determine the namespace in which controller classes will live when using route names to
+     *   determine which controller handles a given route. For example, if passed
+     *   `['App', 'Controller']`, then a route name like `admin.userManagement.index` will map
+     *   to the controller `App\Controller\Admin\UserManagementController` and the controller
+     *   method `::index`.
      */
     public function __construct(
         protected readonly UriFactoryInterface $uriFactory,
         ?callable $loggerFactory = null,
         private readonly string $fallbackRouteName = 'error.notFound',
+        private readonly array $controllerNamespace = ['App', 'Controller'],
     )
     {
         $routerContainer = new RouterContainer();
@@ -170,12 +177,17 @@ abstract class Router
             throw new Exception("Route name unexpectedly has $numSegments segments");
         case 2:
             $controllerNameBase = ucfirst($segments[0]);
-            $controllerName = "App\\Controller\\{$controllerNameBase}Controller";
+            if (empty($this->controllerNamespace)) {
+                $controllerPrefix = '';
+            } else {
+                $controllerPrefix = implode('\\', $this->controllerNamespace) . '\\';
+            }
+            $controllerName = "{$controllerPrefix}{$controllerNameBase}Controller";
             $controllerMethod = $segments[$numSegments - 1];
             break;
         default:
             $controllerNameBase = ucfirst($segments[$numSegments - 2]);
-            $namespaceSegments = ['App', 'Controller'];
+            $namespaceSegments = $this->controllerNamespace;
             for ($i = 0; $i != $numSegments - 2; ++$i) {
                 $namespaceSegments[] = ucfirst($segments[$i]);
             }
@@ -243,7 +255,7 @@ abstract class Router
             $route->attributes,
             $route->permittedRoles,
             $middlewares,
-            $container->get(LoggerInterface::class),
+            ($container->has(LoggerInterface::class) ? $container->get(LoggerInterface::class) : null),
         );
 
         return $action;
