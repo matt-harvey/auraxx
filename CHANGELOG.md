@@ -1,5 +1,11 @@
 # Changelog
 
+### v0.3.1
+
+* Allow customizability of fallback route
+* Document fallback route
+* Some more tests added
+
 ### v0.3.0
 
 * BREAKING CHANGE: Now depends on PSR-11 (ContainerInterface) >= v1.1 but < v2. This is
