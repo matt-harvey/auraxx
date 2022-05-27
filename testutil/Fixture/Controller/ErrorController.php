@@ -20,7 +20,7 @@ final class ErrorController
     }
 
 
-    public function notFound(ServerRequestInterface $request, int $id): ResponseInterface
+    public function notFound(ServerRequestInterface $request): ResponseInterface
     {
         $responseBody = $this->streamFactory->createStream('Not Found');
         $response = $this->responseFactory->createResponse(404)->withBody($responseBody);
