@@ -46,7 +46,8 @@ actually handling a request.
 ## Detailed usage
 
 The code has detailed documentation comment blocks. For example code that uses the library,
-see under the `testutil\Fixture\` directory of this repository.
+see the [test fixture](https://github.com/matt-harvey/auraxx/tree/main/testutil/Fixture) directory
+of this repository.
 
 ## Installation
 
