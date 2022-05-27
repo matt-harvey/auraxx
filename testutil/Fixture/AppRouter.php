@@ -13,9 +13,9 @@ use TestUtil\Fixture\Middleware\MiddlewareC;
 
 final class AppRouter extends Router
 {
-    public function __construct(UriFactoryInterface $uriFactory, ?callable $loggerFactory = null)
+    public function __construct(UriFactoryInterface $uriFactory)
     {
-        parent::__construct($uriFactory, $loggerFactory, 'error.notFound', ['TestUtil', 'Fixture', 'Controller']);
+        parent::__construct($uriFactory, 'error.notFound', ['TestUtil', 'Fixture', 'Controller']);
     }
 
     /** @return array<string, bool> $defaultMiddlewares */

@@ -40,11 +40,7 @@ abstract class Router
 {
     private readonly RouterContainer $routerContainer;
 
-    /**
-     * @param ?callable $loggerFactory will be passed to \Aura\Router\RouterContainer::setLoggerFactory,
-     *   if it is not null. If passed, this will perform *detailed* logging of the router matching
-     *   as determined by the underlying `Aura` router. You would normally want to let this be `null`
-     *   unless you are doing diagnostics.
+    /*
      * @param string $fallbackRouteName the name of the route that you want otherwise unmatched
      *   requests to fall back to. (Generally, this should map to a controller method that you have
      *   arranged to respond with a 404.)
@@ -57,20 +53,27 @@ abstract class Router
      */
     public function __construct(
         protected readonly UriFactoryInterface $uriFactory,
-        ?callable $loggerFactory = null,
         private readonly string $fallbackRouteName = 'error.notFound',
         private readonly array $controllerNamespace = ['App', 'Controller'],
     )
     {
         $routerContainer = new RouterContainer();
-        if ($loggerFactory !== null) {
-            $routerContainer->setLoggerFactory($loggerFactory);
-        }
         $routerContainer->setRouteFactory(fn () => new Route);
         $map = $routerContainer->getMap();
         $map->permittedRoles(null); // By default, no particular role is required for a user to access routes.
         $this->routerContainer = $routerContainer;
         $this->configureRoutes($map);
+    }
+
+    /**
+     * @param callable $loggerFactory will be passed to \Aura\Router\RouterContainer::setLoggerFactory.
+     *   If set, this will perform *detailed* logging of the router matching as determined by the underlying
+     *   `Aura` router. You would normally not set this unless performing diagnostic in your
+     *   development environment, as it logs very verbosely.
+     */
+    public function setLoggerFactory(callable $loggerFactory): void
+    {
+        $this->routerContainer->setLoggerFactory($loggerFactory);
     }
 
     /**
