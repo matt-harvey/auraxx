@@ -1,5 +1,12 @@
 # Changelog
 
+### v0.4.0
+
+* Tolerate absence of logger in container
+* Allow configuration of controller namespace used by Router
+* Better documentation
+* More tests
+
 ### v0.3.1
 
 * Allow customizability of fallback route
