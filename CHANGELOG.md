@@ -1,5 +1,11 @@
 # Changelog
 
+### v0.5.0
+
+* BREAKING CHANGE: Logger factory no longer passable to Router constructor.
+  It can now be set using a separate 'setLoggerFactory' method (mirroring
+  Aura's mechanism for setting this).
+
 ### v0.4.0
 
 * Tolerate absence of logger in container
