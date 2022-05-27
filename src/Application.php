@@ -22,9 +22,11 @@ final class Application implements RequestHandlerInterface
      * @param ContainerInterface $container Must be able to provide instances of the following,
      *   e.g. `$container->get(Auraxx\Router::class)` must return an instance of `Auraxx\Router`:
      *   * Auraxx\Router
-     *   * Psr\Log\LoggerInterface
      *   * Any middleware referred to in the router setup
      *   * Any controller referred to in the router setup
+     *   Optionally, the container instance _may_ provide an instance of `Psr\Log\LoggerInterface`.
+     *   If it does, then `Auraxx` will use it to log, at INFO level, the controller name and method that is
+     *   matched for each route.
      * @param string $controllerAttributeKey The key at which, within the request attributes,
      *   the router should store the controller instance.
      * @param string $permittedRolesAttributeKey The key at which, within the request attributes,
