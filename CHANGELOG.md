@@ -1,5 +1,10 @@
 # Changelog
 
+### v0.6.0
+
+* Require PHP 8.2
+* Upgrade package dependency versions
+
 ### v0.5.0
 
 * BREAKING CHANGE: Logger factory no longer passable to Router constructor.
