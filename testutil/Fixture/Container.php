@@ -69,7 +69,7 @@ final class Container implements ContainerInterface
         throw new Exception("Container could not provider dependency for id $id");
     }
 
-    public function has(string $id): mixed
+    public function has(string $id): bool
     {
         return array_key_exists($id, $this->providers);
     }
