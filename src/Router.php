@@ -218,7 +218,7 @@ abstract class Router
     }
 
     /** @param ?array<string, mixed> $params */
-    public function generate(string $routeName, array $params = null): string
+    public function generate(string $routeName, ?array $params = null): string
     {
         return $this->routerContainer->getGenerator()->generate($routeName, $params ?? []);
     }
@@ -229,9 +229,9 @@ abstract class Router
      */
     public function generateUri(
         string $routeName,
-        array $params = null,
-        array $queryData = null,
-        string $fragment = null,
+        ?array $params = null,
+        ?array $queryData = null,
+        ?string $fragment = null,
     ): UriInterface
     {
         $path = $this->generate($routeName, $params);
