@@ -1,5 +1,9 @@
 # Changelog
 
+### v0.6.1
+
+Support PHP 8.4
+
 ### v0.6.0
 
 * Require PHP 8.2
